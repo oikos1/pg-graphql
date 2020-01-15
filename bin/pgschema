@@ -2,16 +2,16 @@
 
 echo "Dumping schema to sql/schema.sql"
 
-source .env
+//source .env
 
-PGPASSWORD=$PGPASSWORD pg_dump -vc \
+PGPASSWORD="1likepants" pg_dump -vc \
   --schema-only \
   --no-owner \
   --no-privileges \
-  -f sql/schema.sql \
-  -h $PGHOST \
-  -d $PGDATABASE \
-  -U $PGUSER \
-  -p $PGPORT
+  -f ../sql/schema.sql \
+  -h 'localhost' \
+  -d 'pg-graphql' \
+  -U 'postgres' \
+  -p 5432
 
-cat sql/schema.sql
+cat ../sql/schema.sql

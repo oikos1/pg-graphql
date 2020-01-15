@@ -3,7 +3,7 @@
 source .env
 
 PGPASSWORD=$PGPASSWORD psql --set=sslmode=require \
-  -h $PGHOST \
-  -d $PGDATABASE \
-  -U $PGUSER \
-  -p $PGPORT
+  -h "localhost" \
+  -d "pg-graphql" \
+  -U "postgres" \
+  -p 5432

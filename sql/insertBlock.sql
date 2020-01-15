@@ -7,7 +7,7 @@ INSERT INTO block (
 )
 VALUES (
   ${n},
-  to_timestamp(${time}),
+  to_timestamp(${time}/1000),
   $(pip),
   $(pep),
   $(per)

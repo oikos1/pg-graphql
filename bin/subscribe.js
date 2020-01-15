@@ -10,6 +10,7 @@ block.syncMissing();
 
 // Subscribe to new log events
 console.log("Subscribing: blocks, cups, new cups, gov...")
+
 block.subscribe();
 gov.subscribe();
 newCup.subscribe();

@@ -1,50 +1,73 @@
 const R   = require('ramda');
 const lib = require('../lib/common');
-const abi = require('../abi/med.json');
-const abI = require('../abi/tub.json');
-const pip = new lib.web3.eth.Contract(abi, lib.addresses.pip);
-const pep = new lib.web3.eth.Contract(abi, lib.addresses.pep);
-const tub = new lib.web3.eth.Contract(abI, lib.addresses.tub);
+
+let lastPip = [0, false];
+let lastPep = [0, false];
+let lastPer = {ray:0};
+
+let pips = [];
+let peps = [];
+let pers = [];
+var isSubscribed = false;
 
 export const sync = (n) => {
-  return lib.web3.eth.getBlock(n)
-  .then(console.log(n))
-  .then(block => write(n, block.timestamp))
-}
+   return  lib.tronWeb.trx.getBlock(n)
+  .then( block => write(n, block.block_header.raw_data.timestamp))
+ }
 
 export const subscribe = () => {
-  lib.web3.eth.subscribe('newBlockHeaders', (e,r) => {
-    if (e)
-      console.log(e)
-  })
-  .on("data", (b) => write(b.number, b.timestamp))
-  .on("error", console.log);
+  if (!isSubscribed)
+  _subscribe();
+  return  lib.tronWeb.trx.getBlock('latest')
+  .then( block => write(block.block_header.raw_data.number, block.block_header.raw_data.timestamp))  
 }
 
-const write = (n, timestamp) => {
+const write =  (n, timestamp) => {
   return read(n)
-  .then(val => {
+  .then(async (val) => {
     return {
       n: n,
       time: timestamp,
-      pip: lib.u.wad(val[0][0]),
-      pep: lib.u.wad(val[1][0]),
-      per: lib.u.ray(val[2])
+      pip: (typeof val[0] != 'undefined') ? lib.u.wad(val[0][0])  : (await lastValue(n))[0].pip,  
+      pep: (typeof val[1] != 'undefined') ? lib.u.wad(val[1][0])  : (await lastValue(n))[0].pep, 
+      per: (typeof val[2] != 'undefined') ? lib.u.ray(val[2].ray) : (await lastValue(n))[0].per
     }
   })
   .then(data => {
     lib.db.none(lib.sql.insertBlock, data);
-    console.log(data);
   })
   .catch(e => console.log(e));
 }
 
-const read = (n) => {
-  const promises = [
-    pip.methods.peek().call({}, n),
-    pep.methods.peek().call({}, n),
-    tub.methods.per().call({}, n)
-  ]
+const read = async (n) => {
+  let pip = await lib.u.getEvents(lib.addresses.pip, "LogPeek", n); 
+  let pep = await lib.u.getEvents(lib.addresses.pep, "LogPeek", n); 
+  let per = await lib.u.getEvents(lib.addresses.per, "LogPer",  n); 
+
+  let _pip  =  new Object(pip.data[0]);
+  let _pep  =  new Object(pep.data[0]);
+  let _per  =  new Object(per.data[0]);
+
+  let promises = [];
+
+  if (typeof _pip["event_name"] != 'undefined' 
+   && typeof _pep["event_name"] != 'undefined' 
+   && typeof _per["event_name"] != 'undefined') {
+      lastPip = [lib.web3.utils.toBN(_pip["result"].val).toString(), _pip["result"].flag];
+      lastPep = [lib.web3.utils.toBN(_pep["result"].val).toString(), _pep["result"].flag];
+      lastPer = _per["result"];
+      pips.push(lastPip);
+      peps.push(lastPep);
+      pers.push(lastPer);
+      promises[0] = lastPip; 
+      promises[1] = lastPep;
+      promises[2] = lastPer;  
+  } else {
+      promises[0] = pips[pips.length-1];
+      promises[1] = peps[peps.length-1];
+      promises[2] = pers[pers.length-1];
+  }
+
   return Promise.all(promises);
 }
 
@@ -55,19 +78,19 @@ const concurrency = 50;
 const diff = (a, b) => a - b;
 
 export const syncMissing = () => {
-  lib.latestBlock
-  .then(last => { return { from: lib.genBlock, to: last }})
-  .then(opts => missingBlocks(opts))
-  .then(rtn => R.sort(diff, rtn.map(R.prop('n'))))
-  .then(rtn => syncEach(rtn, syncMissing))
-  .catch(e => console.log(e));
+    lib.latestBlock.then(function (res) {
+          return { from: lib.genBlock, to: res.block_header.raw_data.number }
+    }).then(opts => missingBlocks(opts))
+    .then(rtn => R.sort(diff, rtn.map(R.prop('n'))))
+    .then(rtn => syncEach(rtn, syncMissing))
+    .catch(function (err) {
+      console.log(err)
+    });
 }
 
-export const syncFrom = (fromBlock) => {
-  priorBlocks(fromBlock)
-  .then(rtn => R.sort(diff, rtn.map(R.prop('n'))))
-  .then(rtn => syncEach(rtn, syncFrom))
-  .catch(e => console.log(e));
+export const lastValue = (block) => {
+  return getBlock(block)
+  .catch(e => console.log(e));   
 }
 
 export const syncEach = (arr, f) => {
@@ -89,7 +112,12 @@ export const missingBlocks = (opts) => {
   return lib.db.any(lib.sql.missingBlocks, options )
 }
 
-const priorBlocks = (n) => {
-  let options = { block: n, limit: concurrency }
+const getBlock = (n) => {
+  let options = { block: n, limit: 1 }
   return lib.db.any(lib.sql.priorBlocks, options)
+}
+
+const _subscribe = () => {
+  isSubscribed = true; 
+  setInterval(subscribe, 3000);
 }

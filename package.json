@@ -22,9 +22,13 @@
     "postgraphile": "^4.0.0-alpha2.33",
     "postgraphile-plugin-connection-filter": "^1.0.0-alpha.9",
     "ramda": "^0.25.0",
+    "request-promise": "^4.2.5",
+    "trongrid": "^1.2.4",
     "web3": "1.0.0-beta.33"
   },
   "scripts": {
+    "priceSync": "babel-node bin/priceSync.js",
+    "priceSync2": "babel-node bin/priceSync2.js",
     "sync": "babel-node bin/sync.js",
     "sync100": "babel-node bin/sync100.js",
     "subscribe": "babel-node bin/subscribe.js",

@@ -1,61 +1,110 @@
+const R      = require('ramda');
 const lib = require('../lib/common');
-const abi = require('../abi/tub.json');
-const tub = new lib.web3.eth.Contract(abi, lib.addresses.tub);
 
-export const sync = (from, to) => {
-  let options = {
-    fromBlock: from,
-    toBlock: to,
-    filter: {sig: lib.act.cupSigs}
-  }
-  return tub.getPastEvents('LogNote', options)
-  .then(logs => logs.forEach(log => write(log) ))
-  .catch(e => console.log(e));
-}
+export const sync = async (n) => {
+  return lib.u.getEvents(lib.addresses.tub, "LogNote", n)  
+  .then(logs => {
+    logs.data.forEach(log => write(log) );
+  }).catch(e => console.log(e));   
+};
 
-export const subscribe = () => {
-  tub.events.LogNote({
-    filter: { sig: lib.act.cupSigs }
-  }, (e,r) => {
-    if (e)
-      console.log(e)
-  })
-  .on("data", (event) => write(event))
-  .on("error", console.log);
-}
-
-const read = (log) => {
-  return tub.methods.cups(log.returnValues.foo).call({}, log.blockNumber)
-  .then(cup => {
-    let act = lib.act.cupActs[log.returnValues.sig];
-    return {
-      id: lib.web3.utils.hexToNumber(log.returnValues.foo),
-      lad: cup.lad,
-      ink: lib.u.wad(cup.ink),
-      art: lib.u.wad(cup.art),
-      ire: lib.u.wad(cup.ire),
-      act: act,
-      arg: lib.u.arg(act, log.returnValues.bar),
-      guy: log.returnValues.guy, // msg.sender
-      idx: log.logIndex,
-      block: log.blockNumber,
-      tx: log.transactionHash
-    }
+export const subscribe = async () => {
+  const TUB = await lib.u.loadContract(lib.addresses.tub) ;   
+  var i=0;
+  lib.act.cupSigs.forEach(sig => {
+    TUB.LogNote().watch({filters: {"sig": lib.act.cupSigs[i]}}, (err, data) => {
+          if (err) return console.error('Failed to bind event listener:', err);
+          data["block_number"]   = data["block"];
+          data["transaction_id"] = data["transaction"];
+          write(data, {"data":[]});
+    }); 
+    i++;     
   });
-}
+};
+
+const read = async (log) => {
+  let act = lib.act.cupActs[log["result"].sig];
+  let r = [];
+    await lib.u.asyncForEach(Object.entries(lib.act.dict.cup), async (data) => {
+      return await lib.u.getEvents(lib.addresses.tub, lib.u.capitalize(data[0]), log["block_number"] )
+      .then(cups => {
+        cups.data.forEach(cup => {
+          r = push(cup, log, act, r);
+        });
+      })
+    });
+    if (r.length > 0){
+      return r;
+    }  
+};
 
 const write = (log) => {
-  let act = lib.act.cupActs[log.returnValues.sig];
+  let act = lib.act.cupActs[log["result"].sig];
   if(act) {
     return read(log)
     .then(data => {
-      lib.db.none(lib.sql.insertCup, { cup: data })
-      console.log(data);
+        data.forEach(c => {
+          lib.db.none(lib.sql.insertCup, { cup: c })
+        });        
     })
     .catch(e => {
       console.log(e)
-      console.log(lib.act.cupActs[log.returnValues.sig])
+      console.log(lib.act.cupActs[log["result"].sig])
       console.log(log)
     });
   }
-}
+};
+
+//-----------------------------------------------
+// Sync All
+//-----------------------------------------------
+const concurrency = 50;
+const diff = (a, b) => a - b;
+
+export const syncMissing = () => {
+    lib.latestBlock.then(function (res) {
+          return { from: lib.genBlock, to: res.block_header.raw_data.number }
+        }).then(opts => missingBlocks(opts))
+        .then(rtn => R.sort(diff, rtn.map(R.prop('n'))))
+        .then(rtn => syncEach(rtn, syncMissing))
+        .catch(function (err) {
+          console.log(err)
+    });
+};
+
+export const missingBlocks = (opts) => {
+  let options = R.merge(opts, { limit: concurrency })
+  return lib.db.any(lib.sql.missingBlocks, options )
+};
+
+export const syncEach = (arr, f) => {
+  require('bluebird').map(arr, (n) => {
+    return sync(n);
+  }, {concurrency: concurrency})
+  .then(() => {
+    if(R.isEmpty(arr)) {
+      console.log('Cup sync complete');
+    } else {
+      console.log(`Cup - Synced: ${arr[0]} - ${arr[arr.length-1]}`)
+      f(arr[0]);
+    }
+  });
+};
+
+const push = (cup, log, act, arr) => {
+      arr.push({
+        id: lib.web3.utils.hexToNumber(cup["result"].cup),
+        lad: cup["result"].lad.replace("0x", "41"),
+        ink: cup["result"].ink,
+        art: cup["result"].art,
+        ire: cup["result"].ire,
+        act: act,
+        arg: lib.u.arg(act, log["result"].bar), 
+        guy: 0, //log.returnValues.guy, // msg.sender
+        idx: cup["event_index"],
+        block: cup["block_number"],
+        tx: cup["transaction_id"]
+      });
+    return arr;
+};
+

@@ -2,12 +2,13 @@
   "mainnet": {
     "weth": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
     "mkr":  "0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2",
-    "pip":  "0x729D19f657BD0614b4985Cf1D82531c67569197B",
-    "pep":  "0x99041F808D598B782D5a3e498681C2452A31da08",
+    "pip":  "TSQQS98i7MUoNsVcMCx2uDDMUeC2PTpNrs",
+    "pep":  "TK6hdLFASTxZzP5Urg5a48PEPiwpDvP934",
     "dai":  "0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359",
     "peth": "0xf53ad2c6851052a81b42133467480961b2321c09",
-    "tub":  "0x448a5065aebb8e423f0896e6c5d525c040f59af3",
-    "vox":  "0x9b0f70df76165442ca6092939132bbaea77f2d7a"
+    "tub":  "TPXAS493pZhTN5gjmXMJqdWTPJJAmmVge7",
+    "per":  "TAxQvGo8Czb23yvM3ky193uFoCNDrN3Af9",
+    "vox":  "TTjBjDxnue6jvecLkKXd2WogP5uhpdGLoY"
   },
   "kovan": {
     "weth": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
@@ -18,5 +19,8 @@
     "peth": "0xf4d791139ce033ad35db2b2201435fad668b1b64",
     "tub":  "0xa71937147b55deb8a530c7229c442fd3f31b7db2",
     "vox":  "0xbb4339c0ab5b1d9f14bd6e3426444a1e9d86a1d9"
+  },
+  "labels" : {
+    "array": ["cap", "mat","tax","fee", "axe","gap"]
   }
 }
