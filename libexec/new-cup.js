@@ -19,15 +19,16 @@ export const subscribe = async () => {
 };
 
 const write = (log) => {
+  console.log("got log", log)
   let data = {
     id: lib.web3.utils.hexToNumber(log["result"].cup),
-    lad: log["result"].lad,
+    lad: log["result"].lad.replace("0x", "41"),
     ink: 0,
     art: 0,
     ire: 0,
     act: 'open',
     arg: '-',
-    guy: log["result"].lad, // msg.sender
+    guy: log["result"].lad.replace("0x", "41"), // msg.sender
     idx: log["event_index"],
     block: log["block_number"],
     tx: log["transaction_id"]

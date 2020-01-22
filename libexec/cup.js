@@ -100,7 +100,7 @@ const push = (cup, log, act, arr) => {
         ire: cup["result"].ire,
         act: act,
         arg: lib.u.arg(act, log["result"].bar), 
-        guy: 0, //log.returnValues.guy, // msg.sender
+        guy: log["result"].guy.replace("0x", "41"), // msg.sender
         idx: cup["event_index"],
         block: cup["block_number"],
         tx: cup["transaction_id"]

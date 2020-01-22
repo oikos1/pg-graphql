@@ -1,14 +1,15 @@
 {
   "mainnet": {
-    "weth": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-    "mkr":  "0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2",
-    "pip":  "TSQQS98i7MUoNsVcMCx2uDDMUeC2PTpNrs",
-    "pep":  "TK6hdLFASTxZzP5Urg5a48PEPiwpDvP934",
-    "dai":  "0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359",
-    "peth": "0xf53ad2c6851052a81b42133467480961b2321c09",
-    "tub":  "TPXAS493pZhTN5gjmXMJqdWTPJJAmmVge7",
-    "per":  "TAxQvGo8Czb23yvM3ky193uFoCNDrN3Af9",
-    "vox":  "TTjBjDxnue6jvecLkKXd2WogP5uhpdGLoY"
+    "weth": "TWZrkYYBJ58Fqb8hQHDeAJTej62wBCGcs9",
+    "mkr":  "TK62kw3T623FDZxuh8Zn3q4uRjjdSNXNtV",
+    "pip":  "TQdeAuUHmd5NF6FasZQQPJAJAcnxB77mNc",
+    "pep":  "TCuAUsvGepBPdZEAdhGrbprKKzWiRCUfCy",
+    "sai":  "TFFdTQU32miF28gh4yL6zuBfQpMGqc96Fc",
+    "peth": "TBggdBbKZ7PdQBGAjh4ypZB9qtx3u6NgZt",
+    "tub":  "TCHizMDb7d5118yJpn5NKKFtiiLKsxUmDr",
+    "tap":  "TFDk4tiY6GMxPJoUQLmtYGh4Uyw8uHJBrU",
+    "per":  "TXkyo9Ay4WSzPNUEwoaL7YyuBSzYNU4a5U",
+    "vox":  "TK2UyaazLoJyJXeviEs2bPp1gZMSyVJqYi"
   },
   "kovan": {
     "weth": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",

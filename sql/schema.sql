@@ -223,6 +223,7 @@ CREATE VIEW public.cup AS
     c.ink,
     c.ire,
     c.lad,
+    c.guy,
     c.pip,
     c.per,
     ((((c.pip * c.per) * c.ink) / NULLIF(c.art, (0)::numeric)) * (100)::numeric) AS ratio,
@@ -236,6 +237,7 @@ CREATE VIEW public.cup AS
             cup_action.ink,
             cup_action.ire,
             cup_action.lad,
+            cup_action.guy,
             ( SELECT block.pip
                    FROM public.block
                   ORDER BY block.n DESC
@@ -374,6 +376,7 @@ CREATE VIEW public.cup_act AS
     cup_action.ink,
     cup_action.ire,
     cup_action.lad,
+    cup_action.guy,
     block.pip,
     block.per,
     ((((block.pip * block.per) * cup_action.ink) / NULLIF(cup_action.art, (0)::numeric)) * (100)::numeric) AS ratio,
