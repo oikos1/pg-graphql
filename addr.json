@@ -1,15 +1,17 @@
 {
   "mainnet": {
-    "weth": "TWZrkYYBJ58Fqb8hQHDeAJTej62wBCGcs9",
-    "mkr":  "TK62kw3T623FDZxuh8Zn3q4uRjjdSNXNtV",
-    "pip":  "TQdeAuUHmd5NF6FasZQQPJAJAcnxB77mNc",
-    "pep":  "TCuAUsvGepBPdZEAdhGrbprKKzWiRCUfCy",
-    "sai":  "TFFdTQU32miF28gh4yL6zuBfQpMGqc96Fc",
-    "peth": "TBggdBbKZ7PdQBGAjh4ypZB9qtx3u6NgZt",
-    "tub":  "TCHizMDb7d5118yJpn5NKKFtiiLKsxUmDr",
-    "tap":  "TFDk4tiY6GMxPJoUQLmtYGh4Uyw8uHJBrU",
-    "per":  "TXkyo9Ay4WSzPNUEwoaL7YyuBSzYNU4a5U",
-    "vox":  "TK2UyaazLoJyJXeviEs2bPp1gZMSyVJqYi"
+    "weth": "TDks7UVe5N4PXzvHNHCHq6VBJmZNbdms1a",
+    "mkr":  "TC6dusNWAMh1e3a2RK13u2YC1WJL7TP8eH",
+    "pip":  "TDaRdFagKhma6hmV2wAXHXWhQyzDJ8UdKT",
+    "pep":  "TSVaPecmcdZ5XGVi5W3t33jNjsUvwDQx2y",
+    "sai":  "TBQVtkR8JSbANKKefRp4aP55yFTXKHRKRR",
+    "peth": "TC6dusNWAMh1e3a2RK13u2YC1WJL7TP8eH",
+    "tub":  "TPcnTbazV1EJ9PPZ9VuFkUfVWxtGE5mni1",
+    "tap":  "TSnnd1yzLSj7q9hMi1u93swRUqsaKBD4iC",
+    "per":  "TYVhJYkPQzA5MxvSsXdKNZjr6VMQbjgssh",
+    "vox":  "TY27dLPLppvMvicdAMjJXwthPaE7dRrw4S",
+    "chief": "TNkp7g4srou52GXhVua5iY49EbHfuef2iR",
+    "polling": "TYqZQ9tdoD2iVNav6kkL9jXCFJosykDjbA"
   },
   "kovan": {
     "weth": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",

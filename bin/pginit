@@ -7,6 +7,6 @@ sql="../sql/schema.sql"
 
 PGPASSWORD='1likepants' psql -a  \
   -h 'localhost' \
-  -d 'pg-graphql' \
+  -d 'chain' \
   -U 'postgres' \
   -p 5432 < $sql

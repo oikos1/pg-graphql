@@ -3,10 +3,10 @@ set -e
 
 source .env
 
-sql=$(find sql/migrate/$1-*.sql -printf "%p")
+sql=$(find ../sql/migrate/$1*.sql -printf "%p")
 
-PGPASSWORD=$PGPASSWORD psql -a --set=sslmode=require \
-  -h $PGHOST \
-  -d $PGDATABASE \
-  -U $PGUSER \
-  -p $PGPORT < $sql
+PGPASSWORD='1likepants' psql -a  \
+  -h 'localhost' \
+  -d 'chain' \
+  -U 'postgres' \
+  -p 5432 < $sql

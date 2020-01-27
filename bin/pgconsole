@@ -4,6 +4,6 @@ source .env
 
 PGPASSWORD=$PGPASSWORD psql --set=sslmode=require \
   -h "localhost" \
-  -d "pg-graphql" \
+  -d "chain" \
   -U "postgres" \
   -p 5432

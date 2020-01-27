@@ -1,5 +1,6 @@
 const R   = require('ramda');
 const lib = require('../lib/common');
+const cup = require('./cup');
 
 let lastPip = [0, false];
 let lastPep = [0, false];
@@ -34,7 +35,7 @@ const write =  (n, timestamp) => {
     }
   })
   .then(data => {
-    lib.db.none(lib.sql.insertBlock, data);
+    lib.db.none(lib.sql.insertBlock, data).then(()=>cup.sync(n));
   })
   .catch(e => console.log(e));
 }

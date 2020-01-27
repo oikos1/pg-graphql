@@ -5,9 +5,10 @@ const gov    = require('../libexec/gov');
 const cup    = require('../libexec/cup');
 const newCup = require('../libexec/new-cup');
 
+
 console.log("Syncing missing blocks...");
 
 block.syncMissing();
-gov.syncMissing();
-cup.syncMissing();
-newCup.syncMissing();
+//gov.syncMissing();
+//cup.syncMissing();
+//newCup.syncMissing();
